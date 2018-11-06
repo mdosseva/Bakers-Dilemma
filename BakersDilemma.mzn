@@ -1,6 +1,3 @@
-% Beauty Trap
-% Perform the most seductive dance
-
 enum NAME;
 array[NAME] of int: available_funds;
 
@@ -24,7 +21,7 @@ constraint forall( n in NAME )
                    = totals[n] );
 constraint forall( n in NAME )( totals[n] <= available_funds[n] );
 
-%apply bounds on contributions of each funder to each ingredient
+%apply upper bounds on contributions of each funder to each ingredient
 constraint forall( n in NAME, i in INGREDIENT )
                  ( contributions[n,i] <= fund_upper_bounds[n,i] /\
                    contributions[n,i] >= 0);
@@ -44,6 +41,7 @@ constraint forall( i in INGREDIENT, n in NAME )
              exists(m in NAME where m!=n)
              (contributions[m,i]=contributions[n,i])) );
 
+%punish contributers who put matching restrictions on their funds
 var int: obj;
 constraint obj = sum( n in NAME, i in INGREDIENT )( contributions[n,i] );
 solve maximize sum( n in NAME )
