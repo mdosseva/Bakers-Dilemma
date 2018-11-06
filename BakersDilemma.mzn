@@ -42,12 +42,16 @@ constraint forall( i in INGREDIENT, n in NAME )
              (contributions[m,i]=contributions[n,i])) );
 
 %punish contributers who put matching restrictions on their funds
+%this punishment is weighted: funders with stricter matching restrictions
+%are given a higher weight in this punishment maximization
 var int: obj;
 constraint obj = sum( n in NAME, i in INGREDIENT )( contributions[n,i] );
 solve maximize sum( n in NAME )
 ( matching_requirement[n]*totals[n] );
 
-%output
+%output name of contributer, followed by amounts towards each ingredient,
+%in the order in which they appear in the data file.
+%finishes the line with a cumulative total of all investments by contributor.
 output
 [if i = 1 then "\(n): " else "" endif ++
 show(contributions[n,i]) ++
